@@ -29,6 +29,8 @@ if !exists('g:nv_search_paths')
 
 endif
 
+let s:fuzzyfinder = "skim"
+
 let s:window_direction = get(g:, 'nv_window_direction', 'down')
 let s:window_width = get(g:, 'nv_window_width', '40%')
 let s:window_command = get(g:, 'nv_window_command', '')
@@ -80,6 +82,16 @@ else
 endif
 
 let s:search_path_str = join(map(copy(s:search_paths), 'shellescape(v:val)'))
+
+"=========================== Fuzzyfinder ===================================
+
+function! s:fuzzy_run(fct)
+  if s:fuzzyfinder ==? "skim"
+    call skim#run(a:fct)
+  elseif s:fuzzyfinder ==? "fzf"
+    call fzf#run(a:fct)
+  endif
+endfunction
 
 "=========================== Keymap ========================================
 
@@ -196,7 +208,7 @@ endfunction
 " The `' "\S" '` is so that the backslash itself doesn't require escaping.
 " g:search_paths is already shell escaped, so we don't do it again
 command! -nargs=* -bang NV
-      \ call skim#run(
+      \ call s:fuzzy_run(
           \ skim#wrap({
               \ 'sink*': function(exists('*NV_note_handler') ? 'NV_note_handler' : '<sid>handler'),
               \ 'window': s:window_command,
