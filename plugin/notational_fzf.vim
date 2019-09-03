@@ -196,8 +196,8 @@ endfunction
 " The `' "\S" '` is so that the backslash itself doesn't require escaping.
 " g:search_paths is already shell escaped, so we don't do it again
 command! -nargs=* -bang NV
-      \ call fzf#run(
-          \ fzf#wrap({
+      \ call skim#run(
+          \ skim#wrap({
               \ 'sink*': function(exists('*NV_note_handler') ? 'NV_note_handler' : '<sid>handler'),
               \ 'window': s:window_command,
               \ 'source': join([
@@ -249,5 +249,3 @@ command! -nargs=* -bang NV
                                                             \ 'v:val != "" ')
                                                        \ ,':')
                                \ ])},<bang>0))
-
-
